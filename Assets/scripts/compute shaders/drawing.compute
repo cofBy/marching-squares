@@ -1,0 +1,18 @@
+#pragma kernel draw;
+
+int2 mousePos;
+int2 res;
+int2 pixelRes;
+float radius;
+bool isDrawing;
+
+RWTexture2D<float> Result;
+
+[numthreads(8,8,1)]
+void draw (uint3 id : SV_DispatchThreadID)
+{
+    if (distance((float2)mousePos / res, (float2)id.xy / pixelRes) < radius && isDrawing == true)
+    {
+        Result[id.xy] = 1;
+    }
+}
