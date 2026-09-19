@@ -29,6 +29,7 @@ public class drawing : MonoBehaviour
         drawingTexture = new RenderTexture(pixelSize.x, pixelSize.y, 0, RenderTextureFormat.R8);
         drawingTexture.filterMode = FilterMode.Point;
         drawingTexture.enableRandomWrite = true;
+        drawingTexture.Create();
 
         computeDraw.SetTexture(0, "Result", drawingTexture);
         fullscreenMat.SetTexture("_data", drawingTexture);

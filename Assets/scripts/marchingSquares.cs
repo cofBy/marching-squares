@@ -10,6 +10,7 @@ public class marchingSquares : MonoBehaviour
 
     [Header("marching squares")]
     public MeshFilter filter;
+    [Range(0.001f, 0.999f)] public float threshold;
     Mesh marchedSquares;
     bool readbackInProgress = false;
 
@@ -48,6 +49,8 @@ public class marchingSquares : MonoBehaviour
     {
         marchedSquares = new Mesh();
         marchedSquares.name = "marched squares";
+        marchedSquares.indexFormat = IndexFormat.UInt32;
+        filter.mesh = marchedSquares;
     }
 
     void Update()
@@ -80,10 +83,10 @@ public class marchingSquares : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 byte index = 0b00000000;
-                if (data[ y      * request.width + x    ] != 0) index |= (byte)(1 << 0);
-                if (data[ y      * request.width + x + 1] != 0) index |= (byte)(1 << 1);
-                if (data[(y + 1) * request.width + x + 1] != 0) index |= (byte)(1 << 2);
-                if (data[(y + 1) * request.width + x    ] != 0) index |= (byte)(1 << 3);
+                if ((float)data[ y      * request.width + x    ] / 255f > threshold) index |= (byte)(1 << 0);
+                if ((float)data[ y      * request.width + x + 1] / 255f > threshold) index |= (byte)(1 << 1);
+                if ((float)data[(y + 1) * request.width + x + 1] / 255f > threshold) index |= (byte)(1 << 2);
+                if ((float)data[(y + 1) * request.width + x    ] / 255f > threshold) index |= (byte)(1 << 3);
                 if (index == 0) continue;
 
                 foreach (int[] poly in cases[index])
@@ -107,10 +110,11 @@ public class marchingSquares : MonoBehaviour
                 }
             }
         }
+        marchedSquares.Clear();
         marchedSquares.SetVertices(verts);
         marchedSquares.SetTriangles(tris, 0);
+        marchedSquares.RecalculateBounds();
         marchedSquares.RecalculateNormals();
-        filter.mesh = marchedSquares;
     }
     private void OnDestroy()
     {
