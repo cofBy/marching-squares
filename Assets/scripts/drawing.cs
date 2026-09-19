@@ -3,7 +3,7 @@ using UnityEngine;
 public class drawing : MonoBehaviour
 {
     [Header("drawing")]
-    public int radius;
+    public float radius;
 
     [Header("rendering texture")]
     public Mesh quad;
@@ -42,7 +42,7 @@ public class drawing : MonoBehaviour
         computeDraw.SetInts("res",      new int[2] { Screen.width, Screen.height });
         computeDraw.SetInts("pixelRes", new int[2] { pixelSize.x, pixelSize.y});
         computeDraw.SetBool("isDrawing", Input.GetMouseButton(0));
-        computeDraw.SetInt("radius", radius);
+        computeDraw.SetFloat("radius", radius);
         for (int i = 0; i < 10; i++)
         {
             computeDraw.Dispatch(0, (int)groupSize.x, (int)groupSize.y, 1);

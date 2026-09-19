@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d37847a97dadf24f9e4174a541be05b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  radius: 2
+  radius: 0.9
   quad: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pixelSize: {x: 16, y: 16}
   fullscreenMat: {fileID: 2100000, guid: 75b8d2d728bfcfc46913a84d42a703f2, type: 2}

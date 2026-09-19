@@ -13,6 +13,37 @@ public class marchingSquares : MonoBehaviour
     Mesh marchedSquares;
     bool readbackInProgress = false;
 
+    static readonly Vector2[] cellPoints =
+    {
+        new Vector2(0.0f, 0.0f),
+        new Vector2(1.0f, 0.0f),
+        new Vector2(1.0f, 1.0f),
+        new Vector2(0.0f, 1.0f),
+        new Vector2(0.5f, 0.0f),
+        new Vector2(1.0f, 0.5f),
+        new Vector2(0.5f, 1.0f),
+        new Vector2(0.0f, 0.5f),
+    };
+    static readonly int[][][] cases =
+    {
+        new int[0][],
+        new[] { new[] {0, 4, 7} },
+        new[] { new[] {4, 1, 5} },
+        new[] { new[] {0, 1, 5, 7} },
+        new[] { new[] {5, 2, 6} },
+        new[] { new[] {0, 4, 7}, new[] {5, 2, 6} },
+        new[] { new[] {4, 1, 2, 6} },
+        new[] { new[] {0, 1, 2, 6, 7} },
+        new[] { new[] {7, 6, 3} },
+        new[] { new[] {0, 4, 6, 3} },
+        new[] { new[] {4, 1, 5}, new[] {7, 6, 3} },
+        new[] { new[] {0, 1, 5, 6, 3} },
+        new[] { new[] {7, 5, 2, 3} },
+        new[] { new[] {0, 4, 5, 2, 3} },
+        new[] { new[] {4, 1, 2, 3, 7} },
+        new[] { new[] {0, 1, 2, 3} },
+    };
+
     private void Awake()
     {
         marchedSquares = new Mesh();
@@ -42,37 +73,43 @@ public class marchingSquares : MonoBehaviour
 
         List<Vector3> verts = new List<Vector3>(0);
         List<int> tris = new List<int>(0);
-        for (int y = 0; y < request.width; y++)
+        float width = request.width - 1;
+        float height = request.width - 1;
+        for (int y = 0; y < height; y++)
         {
-            for (int x = 0; x < request.height; x++)
+            for (int x = 0; x < width; x++)
             {
-                byte pixelColor = data[y * request.width + x];
+                byte index = 0b00000000;
+                if (data[ y      * request.width + x    ] != 0) index |= (byte)(1 << 0);
+                if (data[ y      * request.width + x + 1] != 0) index |= (byte)(1 << 1);
+                if (data[(y + 1) * request.width + x + 1] != 0) index |= (byte)(1 << 2);
+                if (data[(y + 1) * request.width + x    ] != 0) index |= (byte)(1 << 3);
+                if (index == 0) continue;
 
-                if (pixelColor == 0) continue;
+                foreach (int[] poly in cases[index])
+                {
+                    int baseIndex = verts.Count;
 
-                float sizeY = Camera.main.orthographicSize;
-                float sizeX = sizeY * (Screen.width / Screen.height);
-                float realX = ((float)x / request.width - 0.5f) * sizeX * 2f;
-                float realY = ((float)y / request.height - 0.5f) * sizeY * 2f;
-
-                float difX = 1f / request.width * sizeX * 2f;
-                float difY = 1f / request.height * sizeY * 2f;
-                int baseIndex = verts.Count;
-                verts.Add(new Vector3(realX     , realY     ));
-                verts.Add(new Vector3(realX+difX, realY     ));
-                verts.Add(new Vector3(realX+difX, realY+difY));
-                verts.Add(new Vector3(realX     , realY+difY));
-
-                tris.Add(baseIndex + 0);
-                tris.Add(baseIndex + 1);
-                tris.Add(baseIndex + 2);
-                tris.Add(baseIndex + 0);
-                tris.Add(baseIndex + 2);
-                tris.Add(baseIndex + 3);
+                    float sizeY = Camera.main.orthographicSize;
+                    float sizeX = sizeY * (Screen.width / Screen.height);
+                    foreach (int p in poly)
+                    {
+                        float realX = ((x + cellPoints[p].x) / width - 0.5f) * sizeX * 2;
+                        float realY = ((y + cellPoints[p].y) / height - 0.5f) * sizeY * 2;
+                        verts.Add(new Vector3(realX, realY));
+                    }
+                    for (int i = 1; i < poly.Length - 1; i++)
+                    {
+                        tris.Add(baseIndex);
+                        tris.Add(baseIndex + i + 1);
+                        tris.Add(baseIndex + i);
+                    }
+                }
             }
         }
-        marchedSquares.vertices = verts.ToArray();
-        marchedSquares.triangles = tris.ToArray();
+        marchedSquares.SetVertices(verts);
+        marchedSquares.SetTriangles(tris, 0);
+        marchedSquares.RecalculateNormals();
         filter.mesh = marchedSquares;
     }
     private void OnDestroy()
