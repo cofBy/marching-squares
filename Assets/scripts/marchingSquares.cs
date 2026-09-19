@@ -77,7 +77,7 @@ public class marchingSquares : MonoBehaviour
         List<Vector3> verts = new List<Vector3>(0);
         List<int> tris = new List<int>(0);
         float width = request.width - 1;
-        float height = request.width - 1;
+        float height = request.height - 1;
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)

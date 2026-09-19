@@ -7,6 +7,7 @@ public class drawing : MonoBehaviour
     public float strength;
 
     [Header("rendering texture")]
+    public bool renderDrawing;
     public Mesh quad;
     public Vector2Int pixelSize;
 
@@ -50,6 +51,7 @@ public class drawing : MonoBehaviour
             computeDraw.Dispatch(0, (int)groupSize.x, (int)groupSize.y, 1);
         }
 
-        Graphics.DrawMesh(quad, Matrix4x4.Scale(2f * new Vector3(((float)Screen.width / Screen.height) * Camera.main.orthographicSize, Camera.main.orthographicSize)), fullscreenMat, 0);
+        if (renderDrawing)
+            Graphics.DrawMesh(quad, Matrix4x4.Scale(2f * new Vector3(((float)Screen.width / Screen.height) * Camera.main.orthographicSize, Camera.main.orthographicSize)), fullscreenMat, 0);
     }
 }
