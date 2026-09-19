@@ -20,7 +20,7 @@ public class perlinNoise : MonoBehaviour
     {
         perlinTexture = new RenderTexture(pixelSize.x, pixelSize.y, 0, RenderTextureFormat.R8);
         texture = new Texture2D(perlinTexture.width, perlinTexture.height, TextureFormat.R8, false);
-        perlinTexture.filterMode = FilterMode.Point;
+        perlinTexture.filterMode = FilterMode.Bilinear;
         perlinTexture.enableRandomWrite = true;
         perlinTexture.Create();
 

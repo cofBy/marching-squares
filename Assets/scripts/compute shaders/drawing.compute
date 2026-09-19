@@ -4,15 +4,18 @@ int2 mousePos;
 int2 res;
 int2 pixelRes;
 float radius;
-bool isDrawing;
+int isDrawing;
+float strength;
 
 RWTexture2D<float> Result;
 
 [numthreads(8,8,1)]
 void draw (uint3 id : SV_DispatchThreadID)
 {
-    if (distance((float2)mousePos / res * pixelRes, (float2)id.xy) < radius && isDrawing == true)
+    float dst = distance((float2) mousePos / res * pixelRes, (float2) id.xy);
+    if (dst < radius && isDrawing != 0)
     {
-        Result[id.xy] = 1;
+        Result[id.xy] += isDrawing * strength * (1.0 - saturate(dst / radius));
+        Result[id.xy] = saturate(Result[id.xy]);
     }
 }

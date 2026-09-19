@@ -4,6 +4,7 @@ public class drawing : MonoBehaviour
 {
     [Header("drawing")]
     public float radius;
+    public float strength;
 
     [Header("rendering texture")]
     public Mesh quad;
@@ -27,9 +28,8 @@ public class drawing : MonoBehaviour
         groupSize = new Vector2((float)pixelSize.x / threadX, (float)pixelSize.y / threadY);
 
         drawingTexture = new RenderTexture(pixelSize.x, pixelSize.y, 0, RenderTextureFormat.R8);
-        drawingTexture.filterMode = FilterMode.Point;
+        drawingTexture.filterMode = FilterMode.Bilinear;
         drawingTexture.enableRandomWrite = true;
-        drawingTexture.Create();
 
         computeDraw.SetTexture(0, "Result", drawingTexture);
         fullscreenMat.SetTexture("_data", drawingTexture);
@@ -42,8 +42,9 @@ public class drawing : MonoBehaviour
         computeDraw.SetInts("mousePos", new int[2] { (int)Input.mousePosition.x, (int)Input.mousePosition.y});
         computeDraw.SetInts("res",      new int[2] { Screen.width, Screen.height });
         computeDraw.SetInts("pixelRes", new int[2] { pixelSize.x, pixelSize.y});
-        computeDraw.SetBool("isDrawing", Input.GetMouseButton(0));
+        computeDraw.SetInt("isDrawing", Input.GetMouseButton(0) ? 1 : Input.GetMouseButton(1) ? -1 : 0);
         computeDraw.SetFloat("radius", radius);
+        computeDraw.SetFloat("strength", strength);
         for (int i = 0; i < 10; i++)
         {
             computeDraw.Dispatch(0, (int)groupSize.x, (int)groupSize.y, 1);

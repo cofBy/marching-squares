@@ -82,12 +82,22 @@ public class marchingSquares : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                byte index = 0b00000000;
-                if ((float)data[ y      * request.width + x    ] / 255f > threshold) index |= (byte)(1 << 0);
-                if ((float)data[ y      * request.width + x + 1] / 255f > threshold) index |= (byte)(1 << 1);
-                if ((float)data[(y + 1) * request.width + x + 1] / 255f > threshold) index |= (byte)(1 << 2);
-                if ((float)data[(y + 1) * request.width + x    ] / 255f > threshold) index |= (byte)(1 << 3);
+                float bl = (float)data[ y      * request.width + x    ] / 255f;
+                float br = (float)data[ y      * request.width + x + 1] / 255f;
+                float tr = (float)data[(y + 1) * request.width + x + 1] / 255f;
+                float tl = (float)data[(y + 1) * request.width + x    ] / 255f;
+
+                int index = 0;
+                if (bl >= threshold) index |= 1;
+                if (br >= threshold) index |= 2;
+                if (tr >= threshold) index |= 4;
+                if (tl >= threshold) index |= 8;
                 if (index == 0) continue;
+
+                cellPoints[4] = new Vector2(Mathf.InverseLerp(bl, br, threshold), 0f);
+                cellPoints[5] = new Vector2(1f, Mathf.InverseLerp(br, tr, threshold));
+                cellPoints[6] = new Vector2(Mathf.InverseLerp(tl, tr, threshold), 1f);
+                cellPoints[7] = new Vector2(0f, Mathf.InverseLerp(bl, tl, threshold));
 
                 foreach (int[] poly in cases[index])
                 {
