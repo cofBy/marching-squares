@@ -3,7 +3,7 @@
 int2 mousePos;
 int2 res;
 int2 pixelRes;
-float radius;
+int radius;
 bool isDrawing;
 
 RWTexture2D<float> Result;
@@ -11,7 +11,8 @@ RWTexture2D<float> Result;
 [numthreads(8,8,1)]
 void draw (uint3 id : SV_DispatchThreadID)
 {
-    if (distance((float2)mousePos / res, (float2)id.xy / pixelRes) < radius && isDrawing == true)
+    float2 aspect = float2(res) / float2(pixelRes);
+    if (distance((float2) mousePos, (float2)id.xy * aspect) < radius && isDrawing == true)
     {
         Result[id.xy] = 1;
     }
