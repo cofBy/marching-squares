@@ -34,7 +34,7 @@ public class perlinNoise : MonoBehaviour
         {
             for (int y = 0; y < perlinTexture.height; y++)
             {
-                float value = Mathf.PerlinNoise((float)x / perlinTexture.width * perlinRes, (float)y / perlinTexture.height * perlinRes);
+                float value = Mathf.PerlinNoise((float)x / perlinTexture.width * perlinRes + Time.time, (float)y / perlinTexture.height * perlinRes + Time.time);
                 texture.SetPixel(x, y, Color.white * value);
             }
         }

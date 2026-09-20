@@ -266,7 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 952866421}
   - component: {fileID: 952866422}
-  - component: {fileID: 952866426}
+  - component: {fileID: 952866425}
   - component: {fileID: 952866424}
   - component: {fileID: 952866423}
   m_Layer: 0
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::marchingSquares
   dataTexture: {fileID: 0}
   filter: {fileID: 952866424}
-  threshold: 0.4
+  threshold: 0.47
 --- !u!23 &952866423
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -363,7 +363,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 952866419}
   m_Mesh: {fileID: 0}
---- !u!114 &952866426
+--- !u!114 &952866425
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -376,9 +376,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::drawing
   radius: 2
-  strength: 0.01
+  strength: 0.02
+  renderDrawing: 1
   quad: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  pixelSize: {x: 32, y: 32}
+  pixelSize: {x: 64, y: 64}
   fullscreenMat: {fileID: 2100000, guid: 75b8d2d728bfcfc46913a84d42a703f2, type: 2}
   computeDraw: {fileID: 7200000, guid: 096f3d07c0d69e941a0fe95af610cade, type: 3}
   marcher: {fileID: 952866422}

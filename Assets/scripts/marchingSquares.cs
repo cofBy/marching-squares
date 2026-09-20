@@ -78,6 +78,8 @@ public class marchingSquares : MonoBehaviour
         List<int> tris = new List<int>(0);
         float width = request.width - 1;
         float height = request.height - 1;
+        float sizeX = Camera.main.orthographicSize * ((float)Screen.width / (float)Screen.height);
+        float sizeY = Camera.main.orthographicSize;
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -103,12 +105,10 @@ public class marchingSquares : MonoBehaviour
                 {
                     int baseIndex = verts.Count;
 
-                    float sizeY = Camera.main.orthographicSize;
-                    float sizeX = sizeY * (Screen.width / Screen.height);
                     foreach (int p in poly)
                     {
-                        float realX = ((x + cellPoints[p].x) / width - 0.5f) * sizeX * 2;
-                        float realY = ((y + cellPoints[p].y) / height - 0.5f) * sizeY * 2;
+                        float realX = ((x + cellPoints[p].x) /  width - 0.5f) * sizeX * 2f;
+                        float realY = ((y + cellPoints[p].y) / height - 0.5f) * sizeY * 2f;
                         verts.Add(new Vector3(realX, realY));
                     }
                     for (int i = 1; i < poly.Length - 1; i++)
